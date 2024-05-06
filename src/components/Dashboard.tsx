@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import "../assets/css/Register.css";
 import generateAuthHeaders from "../assets/hashCreator";
