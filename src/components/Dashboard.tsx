@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import "../assets/css/Register.css";
 import generateAuthHeaders from "../assets/hashCreator";
@@ -7,6 +7,7 @@ import {
   useGetBooksQuery,
   usePostBookMutation,
   useDeleteBookMutation,
+  useGetSingleBookMutation,
 } from "../store/services/bookApi";
 import {
   Table,
@@ -29,8 +30,10 @@ export default function Dashboard() {
   // necessary data
   const [isbn, setIsbn] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchedData, setSearchedData] = useState<any>();
   const [selectedBook, setSelectedBook] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   const key = useSelector((state: any) => state.user.key);
   const secret = useSelector((state: any) => state.user.secret);
@@ -42,13 +45,10 @@ export default function Dashboard() {
       : {};
 
   // queries
-  const {
-    data,
-    refetch: HereRefetch,
-  } = useGetBooksQuery<any>(headers);
+  const { data, refetch: HereRefetch } = useGetBooksQuery<any>(headers);
   const [postBook, { isLoading: isAddingBook }] = usePostBookMutation();
   const [deleteBook] = useDeleteBookMutation();
-  // const { data: singleBookData, isLoading: singleBookLoading } = useGetSingleBookQuery<any>();
+  const [singleBookData] = useGetSingleBookMutation<any>();
 
   const handleAddBook = () => {
     const body = { isbn };
@@ -86,11 +86,31 @@ export default function Dashboard() {
 
   const handleSearch = () => {
     // hash for GET All Books
-    // const headersForSearch: any =
-    //   key && secret
-    //     ? generateAuthHeaders(RequestMethods.GET, `/books?search=${searchTerm}`, null, key, secret)
-    //     : {};
-  }
+    const headersForSearch: any =
+      key && secret
+        ? generateAuthHeaders(
+            RequestMethods.GET,
+            `/books/${searchTerm}`,
+            null,
+            key,
+            secret
+          )
+        : {};
+
+    headersForSearch.title = searchTerm;
+
+    setTimeout(() => {
+      singleBookData(headersForSearch).then((response: any) => {
+        if (response.data) {
+          setSearchedData(response.data);
+          setIsSearchModalOpen(true);
+        } else {
+          setSearchedData(null);
+          setIsSearchModalOpen(true);
+        }
+      });
+    }, 100);
+  };
 
   const handleViewBook = (book: any) => {
     setSelectedBook(book);
@@ -100,6 +120,8 @@ export default function Dashboard() {
   useEffect(() => {
     HereRefetch();
   }, [isbn]);
+
+  console.log(searchedData);
 
   return (
     <>
@@ -212,6 +234,45 @@ export default function Dashboard() {
               </Typography>
             </>
           )}
+        </Box>
+      </Modal>
+
+      <Modal
+        open={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            height: "50%",
+            overflow: "auto",
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography variant="h6" style={{marginBottom: '10px'}}>Search Results</Typography>
+          {searchedData?.data.map((book: any, index: number) => (
+            <Paper
+              key={index}
+              sx={{
+                padding: 2,
+                marginBottom: 2,
+                backgroundColor: "#f0f0f0",
+              }}
+            >
+              <Typography variant="body1">Title: {book?.title}</Typography>
+              <Typography variant="body2">Author: {book?.author}</Typography>
+              <Typography variant="body2">
+                Published: {book?.published}
+              </Typography>
+            </Paper>
+          ))}
         </Box>
       </Modal>
     </>

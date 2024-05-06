@@ -12,7 +12,7 @@ export const bookApi = api.injectEndpoints({
         },
       }),
     }),
-    getSingleBook: builder.query({
+    getSingleBook: builder.mutation({
       query: (params: any) => ({
         url: `/books/${params.title}`,
         method: "GET",
@@ -59,7 +59,7 @@ export const bookApi = api.injectEndpoints({
 
 export const {
   useGetBooksQuery,
-  useGetSingleBookQuery,
+  useGetSingleBookMutation,
   usePostBookMutation,
   usePatchBookMutation,
   useDeleteBookMutation,
