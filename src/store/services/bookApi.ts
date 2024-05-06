@@ -34,8 +34,8 @@ export const bookApi = api.injectEndpoints({
       }),
     }),
     patchBook: builder.mutation({
-      query: ({ id, params }) => ({
-        url: `/orders/client-update/${id}`,
+      query: (params:any) => ({
+        url: `/books/${params.id}`,
         method: "PATCH",
         body: params.body,
         headers: {

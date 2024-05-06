@@ -28,6 +28,7 @@ const generateAuthHeaders = (
     signString += userSecret;
   }
 
+  console.log(signString);
   
   const sign = MD5(signString).toString();
 
