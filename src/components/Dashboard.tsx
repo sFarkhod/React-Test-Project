@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import "../assets/css/Register.css";
-import { useNavigate } from "react-router-dom";
 import generateAuthHeaders from "../assets/hashCreator";
 import { RequestMethods } from "../interfaces/IRequestMethods";
 import {
   useGetBooksQuery,
   usePostBookMutation,
   useDeleteBookMutation,
-  useGetSingleBookQuery,
 } from "../store/services/bookApi";
 import {
   Table,
@@ -47,9 +45,6 @@ export default function Dashboard() {
   const {
     data,
     refetch: HereRefetch,
-    error,
-    isLoading,
-    isSuccess,
   } = useGetBooksQuery<any>(headers);
   const [postBook, { isLoading: isAddingBook }] = usePostBookMutation();
   const [deleteBook] = useDeleteBookMutation();
@@ -91,10 +86,10 @@ export default function Dashboard() {
 
   const handleSearch = () => {
     // hash for GET All Books
-    const headersForSearch: any =
-      key && secret
-        ? generateAuthHeaders(RequestMethods.GET, `/books?search=${searchTerm}`, null, key, secret)
-        : {};
+    // const headersForSearch: any =
+    //   key && secret
+    //     ? generateAuthHeaders(RequestMethods.GET, `/books?search=${searchTerm}`, null, key, secret)
+    //     : {};
   }
 
   const handleViewBook = (book: any) => {

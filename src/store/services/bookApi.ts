@@ -1,4 +1,3 @@
-import { BookApiResponse } from "../../interfaces/IBook";
 import { api } from "./api";
 
 export const bookApi = api.injectEndpoints({

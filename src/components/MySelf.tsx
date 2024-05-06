@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import generateAuthHeaders from "../assets/hashCreator";
 import { RequestMethods } from "../interfaces/IRequestMethods";
@@ -31,7 +31,7 @@ export default function MySelf() {
       ? generateAuthHeaders(RequestMethods.GET, "/myself", null, key, secret)
       : {};
 
-  const { data, error, isLoading, isSuccess, refetch } =
+  const { data, isLoading, isSuccess, refetch } =
     useGetInfoMyselfQuery<any>(headers);
 
   // for hiding/showing key and secret

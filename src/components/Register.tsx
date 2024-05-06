@@ -13,7 +13,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import "../assets/css/Register.css";
-import { animated, useSpring, useSprings } from "react-spring";
+import { animated, useSprings } from "react-spring";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useDispatch } from "react-redux";
@@ -139,11 +139,8 @@ export default function Register() {
   const [RegisterResult, { isLoading }] = useRegisterUserMutation();
 
   const {
-    register,
     handleSubmit,
     control,
-    setValue,
-    reset,
 
     formState: { errors },
   } = useForm<RegisterFormValues>({ resolver });
